@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from '@/styles/ProductCarousel.module.css';
 import PaymentModal from './PaymentModal';
-import { Product } from '@/types';
+import { Product, OrderDetails } from '@/types';
 
 const ProductCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,7 +53,7 @@ const ProductCarousel: React.FC = () => {
     setSelectedProduct(null);
   };
 
-  const handleConfirmOrder = (orderDetails: any) => {
+  const handleConfirmOrder = (orderDetails: OrderDetails) => {
     const { product, paymentMethod, deliveryMethod, address } = orderDetails;
     
     const whatsappNumber = "5514988068948";
@@ -105,10 +106,13 @@ const ProductCarousel: React.FC = () => {
           >
             {products.map((product) => (
               <div key={product.id} className={styles.carouselSlide}>
-                <img 
+                <Image 
                   src={product.image} 
                   alt={product.name}
                   className={styles.productImage}
+                  width={400}
+                  height={300}
+                  priority
                 />
                 <div className={styles.productInfo}>
                   <h3 className={styles.productName}>{product.name}</h3>

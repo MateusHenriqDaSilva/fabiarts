@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Product } from '@/types';
+import { Product, OrderDetails } from '@/types';
 import styles from '@/styles/PaymentModal.module.css';
 
 interface PaymentModalProps {
   product: Product;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (orderDetails: any) => void;
+  onConfirm: (orderDetails: OrderDetails) => void;
 }
 
 const PaymentModal: React.FC<PaymentModalProps> = ({ 
@@ -24,7 +24,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   if (!isOpen) return null;
 
   const handleConfirm = () => {
-    const orderDetails = {
+    const orderDetails: OrderDetails = {
       product,
       paymentMethod,
       deliveryMethod,

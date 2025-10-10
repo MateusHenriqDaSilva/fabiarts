@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Product } from '@/types';
+import Image from 'next/image';
+import { Product, OrderDetails } from '@/types';
 import styles from '@/styles/ProductGrid.module.css';
 import PaymentModal from './PaymentModal';
 
@@ -23,7 +24,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
     setSelectedProduct(null);
   };
 
-  const handleConfirmOrder = (orderDetails: any) => {
+  const handleConfirmOrder = (orderDetails: OrderDetails) => {
     const { product, paymentMethod, deliveryMethod, address } = orderDetails;
     
     const whatsappNumber = "5514988068948";
@@ -70,10 +71,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
         <div className={styles.productsGrid}>
           {products.map((product, index) => (
             <div key={product.id} className={styles.productCard} style={{ animationDelay: `${index * 0.1}s` }}>
-              <img 
+              <Image 
                 src={product.image} 
                 alt={product.name}
                 className={styles.productImage}
+                width={400}
+                height={250}
               />
               <div className={styles.productContent}>
                 <h3 className={styles.productName}>{product.name}</h3>
