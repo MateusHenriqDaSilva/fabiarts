@@ -1,0 +1,157 @@
+.categorySection {
+  padding: 2rem 0; /* Reduzido de 3rem */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  position: relative;
+}
+
+.title {
+  font-size: 1.75rem; /* Reduzido de 2.25rem */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem; /* Reduzido de 3rem */
+  color: #2d3748;
+  position: relative;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px; /* Reduzido de -10px */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px; /* Reduzido de 80px */
+  height: 3px; /* Reduzido de 4px */
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border-radius: 2px;
+}
+
+.categoriesContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem; /* Reduzido de 2rem */
+  flex-wrap: wrap;
+  max-width: 700px; /* Reduzido de 800px */
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.categoryButton {
+  padding: 0.75rem 1.5rem; /* Reduzido de 1rem 2rem */
+  border: none;
+  border-radius: 12px; /* Reduzido de 15px */
+  font-size: 1rem; /* Reduzido de 1.1rem */
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-width: 120px; /* Reduzido de 140px */
+  text-transform: uppercase;
+  letter-spacing: 0.3px; /* Reduzido de 0.5px */
+}
+
+.categoryButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.categoryButton:hover::before {
+  left: 100%;
+}
+
+.activeCategory {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4); /* Reduzido de 10px 25px */
+  transform: translateY(-3px); /* Reduzido de -5px */
+}
+
+.inactiveCategory {
+  background: white;
+  color: #4a5568;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* Reduzido de 4px 15px */
+  border: 2px solid transparent;
+}
+
+.inactiveCategory:hover {
+  transform: translateY(-2px); /* Reduzido de -3px */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Reduzido de 8px 20px */
+  background: #f8fafc;
+  color: #2d3748;
+  border: 2px solid #667eea;
+}
+
+/* Efeito de pulso para o botão ativo */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+  }
+  100% {
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+}
+
+.activeCategory {
+  animation: pulse 2s infinite;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .categorySection {
+    padding: 1.5rem 0; /* Reduzido de 2rem */
+  }
+  
+  .title {
+    font-size: 1.5rem; /* Reduzido de 1.75rem */
+    margin-bottom: 1.5rem; /* Reduzido de 2rem */
+  }
+  
+  .categoriesContainer {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .categoryButton {
+    padding: 0.6rem 1.2rem; /* Reduzido de 0.75rem 1.5rem */
+    font-size: 0.9rem; /* Reduzido de 1rem */
+    min-width: 100px; /* Reduzido de 120px */
+  }
+}
+
+@media (max-width: 480px) {
+  .categorySection {
+    padding: 1rem 0; /* Reduzido de 1.5rem */
+  }
+  
+  .categoriesContainer {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem; /* Reduzido de 1rem */
+  }
+  
+  .categoryButton {
+    width: 180px; /* Reduzido de 200px */
+    min-width: auto;
+    padding: 0.5rem 1rem; /* Reduzido */
+  }
+  
+  .title {
+    font-size: 1.3rem; /* Reduzido de 1.5rem */
+    margin-bottom: 1rem; /* Reduzido */
+  }
+  
+  .title::after {
+    bottom: -6px;
+    width: 50px;
+    height: 2px;
+  }
+}
