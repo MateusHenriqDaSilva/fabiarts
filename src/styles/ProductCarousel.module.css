@@ -1,6 +1,6 @@
 .carouselSection {
   position: relative;
-  min-height: 100vh; /* Ocupa toda a altura da tela */
+  min-height: 70vh; /* Ocupa toda a altura da tela */
   margin-top: -80px; /* Compensa a altura do header */
   padding-top: 80px; /* Espaço para o header */
   background: url('../../public/fundo.jpg') center/cover no-repeat;
