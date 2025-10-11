@@ -25,7 +25,6 @@ const ProductCarousel: React.FC = () => {
     { id: 9, name: 'Cachepô Moderno', image: '/destaque9.jpg', price: 89.90, category: 'resina', description: 'Cachepô moderno decorativo' },
   ];
 
-  // Ajusta produtos por view baseado no tamanho da tela
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 480) {
@@ -35,29 +34,43 @@ const ProductCarousel: React.FC = () => {
       } else {
         setProductsPerView(3);
       }
+      setCurrentIndex(0);
     };
 
-    handleResize(); // Define o valor inicial
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const totalSlides = Math.ceil(products.length / productsPerView);
 
+  // CÁLCULO SIMPLES E CORRETO
+  const getTransformValue = () => {
+    return `translateX(-${currentIndex * 100}%)`;
+  };
+
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === totalSlides - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex >= totalSlides - 1) {
+        return 0;
+      }
+      return prevIndex + 1;
+    });
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? totalSlides - 1 : prevIndex - 1
-    );
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex <= 0) {
+        return totalSlides - 1;
+      }
+      return prevIndex - 1;
+    });
   };
 
   const goToSlide = (index: number) => {
-    setCurrentIndex(index);
+    if (index >= 0 && index < totalSlides) {
+      setCurrentIndex(index);
+    }
   };
 
   const handleBuyClick = (product: Product) => {
@@ -119,27 +132,29 @@ const ProductCarousel: React.FC = () => {
         <div className={styles.carouselContainer}>
           <div 
             className={styles.carouselTrack}
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            style={{ transform: getTransformValue() }}
           >
             {products.map((product) => (
               <div key={product.id} className={styles.carouselSlide}>
-                <Image 
-                  src={product.image} 
-                  alt={product.name}
-                  className={styles.productImage}
-                  width={400}
-                  height={300}
-                  priority
-                />
-                <div className={styles.productInfo}>
-                  <h3 className={styles.productName}>{product.name}</h3>
-                  <p className={styles.productPrice}>R$ {product.price.toFixed(2)}</p>
-                  <button 
-                    className={styles.buyButton}
-                    onClick={() => handleBuyClick(product)}
-                  >
-                    Comprar
-                  </button>
+                <div className={styles.carouselSlideContent}>
+                  <Image 
+                    src={product.image} 
+                    alt={product.name}
+                    className={styles.productImage}
+                    width={400}
+                    height={300}
+                    priority
+                  />
+                  <div className={styles.productInfo}>
+                    <h3 className={styles.productName}>{product.name}</h3>
+                    <p className={styles.productPrice}>R$ {product.price.toFixed(2)}</p>
+                    <button 
+                      className={styles.buyButton}
+                      onClick={() => handleBuyClick(product)}
+                    >
+                      Comprar
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

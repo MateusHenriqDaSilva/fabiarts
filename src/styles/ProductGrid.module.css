@@ -6,7 +6,7 @@
 
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -22,6 +22,9 @@
   position: relative;
   opacity: 0;
   animation: fadeInUp 0.6s ease forwards;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Garante que todos tenham a mesma altura */
 }
 
 .productCard:hover {
@@ -34,6 +37,7 @@
   height: 250px;
   object-fit: cover;
   transition: transform 0.3s ease;
+  flex-shrink: 0; /* Impede que a imagem diminua */
 }
 
 .productCard:hover .productImage {
@@ -42,6 +46,9 @@
 
 .productContent {
   padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Ocupa todo o espaço restante */
 }
 
 .productName {
@@ -50,6 +57,7 @@
   color: #2d3748;
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  flex-shrink: 0;
 }
 
 .productDescription {
@@ -57,13 +65,16 @@
   margin-bottom: 1rem;
   line-height: 1.5;
   font-size: 0.95rem;
+  flex-grow: 1; /* Descrição ocupa espaço disponível */
+  min-height: 60px; /* Altura mínima para alinhar */
 }
 
 .productFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: auto; /* Empurra para baixo */
+  flex-shrink: 0;
 }
 
 .productPrice {
@@ -74,6 +85,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  flex-shrink: 0;
 }
 
 .buyButton {
@@ -86,6 +98,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  flex-shrink: 0;
+  white-space: nowrap; /* Impede quebra de texto */
 }
 
 .buyButton:hover {
@@ -106,35 +120,67 @@
   }
 }
 
-/* Responsivo */
+/* RESPONSIVO CORRIGIDO */
+@media (max-width: 1024px) {
+  .productsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .productsSection {
     padding: 2rem 0;
   }
   
   .productsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     padding: 0 1rem;
   }
   
   .productCard {
-    margin: 0 auto;
-    max-width: 400px;
+    max-width: 100%;
+    margin: 0;
   }
   
   .productContent {
     padding: 1.25rem;
   }
   
+  .productDescription {
+    min-height: 50px; /* Ajuste para mobile */
+  }
+  
   .productFooter {
-    flex-direction: column;
+    flex-direction: row; /* Mantém lado a lado no mobile */
     gap: 1rem;
-    align-items: stretch;
   }
   
   .buyButton {
+    flex-shrink: 0;
+    min-width: 120px; /* Largura mínima para o botão */
+  }
+}
+
+@media (max-width: 640px) {
+  .productsGrid {
+    grid-template-columns: 1fr; /* 1 coluna - todos mesma largura */
+    gap: 1rem;
+  }
+  
+  .productCard {
     width: 100%;
+    max-width: 400px;
+    margin: 0 auto; /* Centraliza os cards */
+  }
+  
+  .productImage {
+    height: 220px; /* Altura consistente */
+  }
+  
+  .productDescription {
+    min-height: 45px;
   }
 }
 
@@ -142,6 +188,7 @@
   .productsGrid {
     grid-template-columns: 1fr;
     gap: 1rem;
+    padding: 0 0.5rem;
   }
   
   .productCard {
@@ -163,5 +210,32 @@
   .buyButton {
     padding: 8px 20px;
     font-size: 0.9rem;
+    min-width: 100px;
+  }
+  
+  .productFooter {
+    gap: 0.75rem;
+  }
+}
+
+/* Para garantir alinhamento perfeito em telas muito pequenas */
+@media (max-width: 360px) {
+  .productsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .productFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  
+  .buyButton {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .productPrice {
+    text-align: center;
   }
 }
