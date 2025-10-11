@@ -15,15 +15,15 @@ const Footer: React.FC = () => {
             <div className={styles.contactInfo}>
               <div className={styles.contactItem}>
                 <span>📧</span>
-                <span>contato@fabiarts.com</span>
+                <span>fabianahn97@gmail.com</span>
               </div>
               <div className={styles.contactItem}>
                 <span>📱</span>
-                <span>(11) 99999-9999</span>
+                <span>(11) 98806-8948</span>
               </div>
               <div className={styles.contactItem}>
                 <span>🕒</span>
-                <span>Seg - Sex: 9h às 18h</span>
+                <span>Seg - Sex: 9h às 17h</span>
               </div>
             </div>
           </div>
