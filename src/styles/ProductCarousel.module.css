@@ -40,7 +40,7 @@
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0,0,0,0.3);
   height: 400px;
-  padding: 0 50px;
+  padding: 0 60px; /* Aumentei o padding para dar espaço às setas */
   z-index: 2;
 }
 
@@ -80,7 +80,7 @@
   flex-direction: column;
   justify-content: space-between;
   flex-grow: 1;
-  min-height: 120px; /* Garante altura mínima para o info */
+  min-height: 120px;
 }
 
 .productName {
@@ -113,10 +113,74 @@
   box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
   width: 100%;
   flex-shrink: 0;
-  min-height: 40px; /* Altura mínima para o botão */
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.buyButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.5);
+  background: linear-gradient(45deg, #56d187, #48bb78);
+}
+
+/* SETAS CORRIGIDAS - Agora posicionadas corretamente */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 20; /* Z-index maior para ficar acima de tudo */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.navButton:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prevButton {
+  left: 5px; /* Posicionado dentro do container */
+}
+
+.nextButton {
+  right: 5px; /* Posicionado dentro do container */
+}
+
+/* Indicadores do carrossel */
+.carouselIndicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: white;
+  transform: scale(1.2);
 }
 
 /* RESPONSIVO CORRIGIDO */
@@ -124,7 +188,7 @@
   .carouselContainer {
     max-width: 95%;
     height: 380px;
-    padding: 0 35px;
+    padding: 0 50px; /* Mantém espaço para setas */
   }
   
   .carouselSlide {
@@ -138,6 +202,11 @@
   .productInfo {
     min-height: 110px;
     padding: 0.8rem;
+  }
+  
+  .navButton {
+    width: 40px;
+    height: 40px;
   }
 }
 
@@ -154,11 +223,11 @@
   
   .carouselContainer {
     height: 350px;
-    padding: 0 30px;
+    padding: 0 45px; /* Mantém espaço para setas */
   }
   
   .carouselSlide {
-    width: calc(50% - 0.75rem); /* 2 produtos por view */
+    width: calc(50% - 0.75rem);
   }
   
   .productImage {
@@ -175,16 +244,29 @@
     font-size: 0.85rem;
     min-height: 38px;
   }
+  
+  .navButton {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .prevButton {
+    left: 3px;
+  }
+  
+  .nextButton {
+    right: 3px;
+  }
 }
 
 @media (max-width: 640px) {
   .carouselContainer {
     height: 320px;
-    padding: 0 25px;
+    padding: 0 40px; /* Mantém espaço para setas */
   }
   
   .carouselSlide {
-    width: calc(50% - 0.75rem); /* Mantém 2 produtos */
+    width: calc(50% - 0.75rem);
   }
   
   .productImage {
@@ -205,16 +287,21 @@
     font-size: 0.8rem;
     min-height: 36px;
   }
+  
+  .navButton {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 @media (max-width: 480px) {
   .carouselContainer {
     height: 300px;
-    padding: 0 20px;
+    padding: 0 35px; /* Mantém espaço para setas */
   }
   
   .carouselSlide {
-    width: 100%; /* 1 produto por view */
+    width: 100%;
   }
   
   .productImage {
@@ -230,5 +317,18 @@
     padding: 10px 20px;
     font-size: 0.9rem;
     min-height: 40px;
+  }
+  
+  .navButton {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .prevButton {
+    left: 2px;
+  }
+  
+  .nextButton {
+    right: 2px;
   }
 }

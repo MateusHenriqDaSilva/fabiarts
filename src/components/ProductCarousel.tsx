@@ -114,7 +114,7 @@ const ProductCarousel: React.FC = () => {
   return (
     <>
       <section className={styles.carouselSection}>
-        <h2 className={styles.title}>Produtos em Destaque</h2>
+        {/* <h2 className={styles.title}>Produtos em Destaque</h2> */}
         
         <div className={styles.carouselContainer}>
           <div 
