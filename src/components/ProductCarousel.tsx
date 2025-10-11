@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from '@/styles/ProductCarousel.module.css';
@@ -11,6 +11,7 @@ const ProductCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productsPerView, setProductsPerView] = useState(3);
   
   const products: Product[] = [
     { id: 1, name: 'Porta-joias Resina', image: '/destaque1.jpg', price: 89.90, category: 'resina', description: 'Porta-joias em resina artesanal' },
@@ -24,7 +25,23 @@ const ProductCarousel: React.FC = () => {
     { id: 9, name: 'Cachepô Moderno', image: '/destaque9.jpg', price: 89.90, category: 'resina', description: 'Cachepô moderno decorativo' },
   ];
 
-  const productsPerView = 3;
+  // Ajusta produtos por view baseado no tamanho da tela
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 480) {
+        setProductsPerView(1);
+      } else if (window.innerWidth < 768) {
+        setProductsPerView(2);
+      } else {
+        setProductsPerView(3);
+      }
+    };
+
+    handleResize(); // Define o valor inicial
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const totalSlides = Math.ceil(products.length / productsPerView);
 
   const nextSlide = () => {
