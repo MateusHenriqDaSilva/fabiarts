@@ -31,8 +31,8 @@ const mockProducts: Product[] = [
   { id: 14, name: 'Mesa Escritório', price: 699.90, category: 'mesa', image: '/mesa/mesa2.jpg', description: 'Mesa para escritório em madeira' },
   { id: 15, name: 'Mesa Lateral', price: 199.90, category: 'mesa', image: '/mesa/mesa3.jpg', description: 'Mesa lateral decorativa' },
   { id: 16, name: 'Mesa Rustica', price: 799.90, category: 'mesa', image: '/mesa/mesa4.jpg', description: 'Mesa rústica em madeira maciça' },
-  { id: 17, name: 'Mesa Redonda', price: 499.90, category: 'mesa', image: '/mesa/mesa5.jpg', description: 'Mesa redonda para sala' },
-  { id: 18, name: 'Mesa Dobrável', price: 299.90, category: 'mesa', image: '/mesa/mesa6.jpg', description: 'Mesa dobrável prática' },
+  // { id: 17, name: 'Mesa Redonda', price: 499.90, category: 'mesa', image: '/mesa/mesa5.jpg', description: 'Mesa redonda para sala' },
+  // { id: 18, name: 'Mesa Dobrável', price: 299.90, category: 'mesa', image: '/mesa/mesa6.jpg', description: 'Mesa dobrável prática' },
 ];
 
 export default function Home() {
