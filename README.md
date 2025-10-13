@@ -1,5 +1,5 @@
 # Estrutura
-fabiarts/
+chicocosmeticos/
 ├── app/
 │   ├── layout.tsx
 │   ├── page.tsx
