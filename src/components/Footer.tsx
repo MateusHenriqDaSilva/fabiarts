@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
           <div className={styles.footerColumn}>
             <h4 className={styles.columnTitle}>Localização</h4>
             <p className={styles.address}>
-              Residencial Albuquerque Lins 10-54
+              Residencial Albuquerque Lins 10-54 - Bauru-SP
             </p>
             <div className={styles.copyrightSection}>
               <p className={styles.copyright}>
