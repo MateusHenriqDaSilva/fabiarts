@@ -1,9 +1,13 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
+import { CartProvider } from '../components/CartContext';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Fabiarts - Produtos Artesanais',
-  description: 'Produtos artesanais em resina, madeira e mesas',
+  title: 'Fabi Arts',
+  description: 'Loja de produtos de artesanais',
 };
 
 export default function RootLayout({
@@ -13,8 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className="min-h-screen flex flex-col">
-        {children}
+      <body className={inter.className}>
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

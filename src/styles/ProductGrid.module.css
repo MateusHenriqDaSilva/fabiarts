@@ -69,12 +69,46 @@
   min-height: 60px; /* Altura mínima para alinhar */
 }
 
+/* Nova classe para a mensagem de adicionado */
+.addedMessage {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  animation: fadeInOut 2s ease-in-out;
+  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+}
+
+@keyframes fadeInOut {
+  0% { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+  20% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+  80% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-10px); 
+  }
+}
+
 .productFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: auto; /* Empurra para baixo */
   flex-shrink: 0;
+  gap: 1rem;
 }
 
 .productPrice {
@@ -89,23 +123,27 @@
 }
 
 .buyButton {
-  background: linear-gradient(135deg, #48bb78, #38a169);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  padding: 10px 24px;
+  padding: 10px 20px;
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
   flex-shrink: 0;
   white-space: nowrap; /* Impede quebra de texto */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
 }
 
 .buyButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(72, 187, 120, 0.5);
-  background: linear-gradient(135deg, #56d187, #48bb78);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  background: linear-gradient(135deg, #764ba2, #667eea);
 }
 
 /* Animações */
@@ -160,6 +198,8 @@
   .buyButton {
     flex-shrink: 0;
     min-width: 120px; /* Largura mínima para o botão */
+    padding: 8px 16px;
+    font-size: 0.85rem;
   }
 }
 
@@ -181,6 +221,11 @@
   
   .productDescription {
     min-height: 45px;
+  }
+  
+  .addedMessage {
+    font-size: 0.8rem;
+    padding: 6px 10px;
   }
 }
 
@@ -208,13 +253,18 @@
   }
   
   .buyButton {
-    padding: 8px 20px;
-    font-size: 0.9rem;
+    padding: 8px 16px;
+    font-size: 0.85rem;
     min-width: 100px;
   }
   
   .productFooter {
     gap: 0.75rem;
+  }
+  
+  .addedMessage {
+    font-size: 0.75rem;
+    padding: 5px 8px;
   }
 }
 
@@ -233,6 +283,7 @@
   .buyButton {
     width: 100%;
     min-width: auto;
+    justify-content: center;
   }
   
   .productPrice {

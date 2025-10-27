@@ -1,0 +1,103 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+const ACCESS_TOKEN = 'APP_USR-6224315043719608-102112-8dadbec1d2d9cbf24a815f8cb8ecf2e8-225298940';
+
+function generateIdempotencyKey(): string {
+  return `mp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
+export async function POST(request: NextRequest) {
+  console.log('🚀 Criando pagamento...');
+
+  try {
+    const body = await request.json();
+
+    // Validações básicas
+    if (!body.transaction_amount || body.transaction_amount <= 0) {
+      return NextResponse.json(
+        { error: 'Valor da transação inválido' },
+        { status: 400 }
+      );
+    }
+
+    if (!body.payer?.email) {
+      return NextResponse.json(
+        { error: 'Email do pagador é obrigatório' },
+        { status: 400 }
+      );
+    }
+
+    // Payload base
+    const payload: any = {
+      transaction_amount: Number(body.transaction_amount.toFixed(2)),
+      description: body.description?.substring(0, 200) || 'Pagamento',
+      payer: {
+        email: body.payer.email,
+      },
+    };
+
+    // Configuração específica para PIX
+    if (body.payment_method_id === 'pix') {
+      payload.payment_method_id = 'pix';
+      payload.date_of_expiration = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    }
+
+    // Configuração específica para Cartão
+    if (body.token) {
+      payload.token = body.token;
+      payload.installments = body.installments || 1;
+      payload.payment_method_id = body.payment_method_id; // Opcional - será detectado pelo token
+      payload.transaction_details = {
+        financial_institution: null
+      };
+      payload.capture = true; // Capturar o pagamento imediatamente
+    }
+
+    console.log('📤 Payload:', JSON.stringify(payload, null, 2));
+
+    const idempotencyKey = generateIdempotencyKey();
+    
+    const mpResponse = await fetch('https://api.mercadopago.com/v1/payments', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
+        'X-Idempotency-Key': idempotencyKey,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await mpResponse.json();
+
+    if (!mpResponse.ok) {
+      console.error('❌ Erro do Mercado Pago:', data);
+      
+      return NextResponse.json(
+        { 
+          error: 'Falha no pagamento',
+          message: data.message,
+          details: data.cause?.[0]?.description || data.error,
+        },
+        { status: mpResponse.status }
+      );
+    }
+
+    console.log('✅ Pagamento criado!', {
+      id: data.id,
+      status: data.status,
+      payment_method: data.payment_method_id,
+    });
+
+    return NextResponse.json(data);
+
+  } catch (error) {
+    console.error('💥 Erro interno:', error);
+    return NextResponse.json(
+      { 
+        error: 'Erro interno do servidor',
+        message: 'Não foi possível processar o pagamento'
+      },
+      { status: 500 }
+    );
+  }
+}

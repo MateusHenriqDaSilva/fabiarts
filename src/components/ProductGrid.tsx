@@ -2,111 +2,70 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Product, OrderDetails } from '@/types';
+import { ShoppingCart } from 'lucide-react';
+import { Product } from '@/types';
 import styles from '@/styles/ProductGrid.module.css';
-import PaymentModal from './PaymentModal';
+import { useCart } from './CartContext';
 
 interface ProductGridProps {
   products: Product[];
 }
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showAddedMessage, setShowAddedMessage] = useState<number | null>(null);
+  const { addToCart, triggerAnimation } = useCart();
 
-  const handleBuyClick = (product: Product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedProduct(null);
-  };
-
-  const handleConfirmOrder = (orderDetails: OrderDetails) => {
-    const { product, paymentMethod, deliveryMethod, address } = orderDetails;
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+    triggerAnimation();
+    setShowAddedMessage(product.id);
     
-    const whatsappNumber = "5514988068948";
+    setTimeout(() => {
+      setShowAddedMessage(null);
+    }, 2000);
     
-    let message = `Olá! Gostaria de comprar o produto:\n\n`;
-    message += `*${product.name}*\n`;
-    message += `💵 *Preço:* R$ ${product.price.toFixed(2)}\n\n`;
-    
-    message += `💳 *Forma de Pagamento:*\n`;
-    switch(paymentMethod) {
-      case 'pix':
-        message += `• PIX (Pagamento instantâneo)\n`;
-        break;
-      case 'cartao':
-        message += `• Cartão de Crédito/Débito (Maquininha)\n`;
-        break;
-      case 'dinheiro':
-        message += `• Dinheiro (Pagamento na entrega)\n`;
-        break;
-    }
-    
-    message += `\n🚚 *Tipo de Entrega:*\n`;
-    if (deliveryMethod === 'retirada') {
-      message += `• Retirada no Local\n`;
-      message += `📍 Residencial Albuquerque Lins 10-54\n`;
-    } else {
-      message += `• Entrega em Domicílio\n`;
-      if (address) {
-        message += `📍 Endereço: ${address}\n`;
-      }
-    }
-    
-    message += `\nPoderia confirmar minha compra?`;
-    
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
-    
-    window.open(whatsappUrl, '_blank');
+    console.log(`✅ Produto "${product.name}" adicionado ao carrinho!`);
   };
 
   return (
-    <>
-      <section className={styles.productsSection}>
-        <div className={styles.productsGrid}>
-          {products.map((product, index) => (
-            <div key={product.id} className={styles.productCard} style={{ animationDelay: `${index * 0.1}s` }}>
-              <Image 
-                src={product.image} 
-                alt={product.name}
-                className={styles.productImage}
-                width={400}
-                height={250}
-              />
-              <div className={styles.productContent}>
-                <h3 className={styles.productName}>{product.name}</h3>
-                <p className={styles.productDescription}>{product.description}</p>
-                <div className={styles.productFooter}>
-                  <span className={styles.productPrice}>
-                    R$ {product.price.toFixed(2)}
-                  </span>
-                  <button 
-                    className={styles.buyButton}
-                    onClick={() => handleBuyClick(product)}
-                  >
-                    Comprar
-                  </button>
+    <section className={styles.productsSection}>
+      <div className={styles.productsGrid}>
+        {products.map((product, index) => (
+          <div key={product.id} className={styles.productCard} style={{ animationDelay: `${index * 0.1}s` }}>
+            <Image 
+              src={product.image} 
+              alt={product.name}
+              className={styles.productImage}
+              width={400}
+              height={250}
+            />
+            <div className={styles.productContent}>
+              <h3 className={styles.productName}>{product.name}</h3>
+              <p className={styles.productDescription}>{product.description}</p>
+              
+              {showAddedMessage === product.id && (
+                <div className={styles.addedMessage}>
+                  ✅ Adicionado ao carrinho!
                 </div>
+              )}
+              
+              <div className={styles.productFooter}>
+                <span className={styles.productPrice}>
+                  R$ {product.price.toFixed(2)}
+                </span>
+                <button 
+                  className={styles.buyButton}
+                  onClick={() => handleAddToCart(product)}
+                >
+                  <ShoppingCart size={16} />
+                  Adicionar
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {selectedProduct && (
-        <PaymentModal
-          product={selectedProduct}
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmOrder}
-        />
-      )}
-    </>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 };
 
