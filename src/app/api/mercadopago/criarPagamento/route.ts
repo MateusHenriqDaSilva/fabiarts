@@ -37,7 +37,6 @@ interface RequestBody {
   payment_method_id?: string;
   token?: string;
   installments?: number;
-  payment_method_id?: string;
 }
 
 function generateIdempotencyKey(): string {
