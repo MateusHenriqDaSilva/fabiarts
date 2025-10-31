@@ -38,13 +38,37 @@ interface CardData {
   installments: number;
 }
 
-// Interface para erros do cartão (todas as propriedades são strings opcionais)
+// Interface para erros do cartão
 interface CardErrors {
   number?: string;
   name?: string;
   expiry?: string;
   cvc?: string;
   installments?: string;
+}
+
+// Interface para o payload de pagamento
+interface PaymentPayload {
+  transaction_amount: number;
+  description: string;
+  payer: {
+    email: string;
+  };
+  metadata: {
+    total_items: number;
+    subtotal: number;
+    discount: number;
+    delivery_method: string;
+    address: string;
+    items: Array<{
+      product_id: number;
+      product_name: string;
+      quantity: number;
+      price: number;
+    }>;
+  };
+  payment_method_id?: string;
+  date_of_expiration?: string;
 }
 
 const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
@@ -69,7 +93,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
     cvc: '',
     installments: 1
   });
-  const [cardErrors, setCardErrors] = useState<CardErrors>({}); // Tipo corrigido
+  const [cardErrors, setCardErrors] = useState<CardErrors>({});
 
   // Produtos relacionados (exemplo)
   const relatedProducts: Product[] = [
@@ -136,9 +160,9 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
     setCardErrors({});
   };
 
-  // Validação do cartão - CORRIGIDA
+  // Validação do cartão
   const validateCard = (): boolean => {
-    const errors: CardErrors = {}; // Usando a interface específica
+    const errors: CardErrors = {};
 
     // Validar número do cartão (apenas números, 13-19 dígitos)
     const cleanNumber = cardData.number.replace(/\s/g, '');
@@ -161,7 +185,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
       errors.cvc = 'CVC inválido';
     }
 
-    // Validar parcelas - JÁ É NUMBER, SEM CONVERSÃO NECESSÁRIA
+    // Validar parcelas
     if (cardData.installments < 1 || cardData.installments > 12) {
       errors.installments = 'Número de parcelas inválido';
     }
@@ -174,7 +198,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
   const formatCardNumber = (value: string): string => {
     const cleanValue = value.replace(/\D/g, '');
     const formatted = cleanValue.replace(/(\d{4})/g, '$1 ').trim();
-    return formatted.slice(0, 19); // Limita a 16 dígitos + espaços
+    return formatted.slice(0, 19);
   };
 
   // Formatar data de expiração
@@ -186,7 +210,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
     return cleanValue;
   };
 
-  // Handler para mudanças nos campos do cartão - CORRIGIDA
+  // Handler para mudanças nos campos do cartão
   const handleCardChange = (field: keyof CardData, value: string | number) => {
     let formattedValue: string | number = value;
 
@@ -197,7 +221,6 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
     } else if (field === 'cvc') {
       formattedValue = (value as string).replace(/\D/g, '').slice(0, 4);
     } else if (field === 'installments') {
-      // Garantir que sempre seja number
       const numValue = parseInt(value as string) || 1;
       formattedValue = Math.min(Math.max(numValue, 1), 12);
     }
@@ -216,7 +239,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  // Função específica para o select de parcelas - NOVA FUNÇÃO
+  // Função específica para o select de parcelas
   const handleInstallmentsChange = (value: string) => {
     const numValue = parseInt(value) || 1;
     const installments = Math.min(Math.max(numValue, 1), 12);
@@ -237,11 +260,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
 
   // Função para obter token do cartão via Mercado Pago
   const getCardToken = async (): Promise<string> => {
-    // Em uma implementação real, você usaria o MercadoPago.js para tokenizar o cartão
-    // Esta é uma simulação - na prática você precisaria integrar com a SDK do Mercado Pago
-
     return new Promise((resolve, reject) => {
-      // Simulação de tokenização
       setTimeout(() => {
         const cleanNumber = cardData.number.replace(/\s/g, '');
         if (cleanNumber.startsWith('4')) {
@@ -254,6 +273,35 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
       }, 1000);
     });
   };
+
+  // Interface para o payload do cartão
+  interface CardPaymentPayload {
+    transaction_amount: number;
+    token: string;
+    description: string;
+    installments: number;
+    payment_method_id: string;
+    payer: {
+      email: string;
+      identification: {
+        type: string;
+        number: string;
+      };
+    };
+    metadata: {
+      total_items: number;
+      subtotal: number;
+      discount: number;
+      delivery_method: string;
+      address: string;
+      items: Array<{
+        product_id: number;
+        product_name: string;
+        quantity: number;
+        price: number;
+      }>;
+    };
+  }
 
   // Função para processar pagamento com cartão
   const handleCardPayment = async () => {
@@ -269,17 +317,17 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
       const cardToken = await getCardToken();
 
       // 2. Criar pagamento no Mercado Pago
-      const payload = {
+      const payload: CardPaymentPayload = {
         transaction_amount: parseFloat(total.toFixed(2)),
         token: cardToken,
         description: `Pedido com ${totalItems} itens - Chico Cosméticos`,
-        installments: cardData.installments, // Já é number
+        installments: cardData.installments,
         payment_method_id: cardData.number.startsWith('4') ? 'visa' : 'master',
         payer: {
           email: email.trim(),
           identification: {
             type: 'CPF',
-            number: '12345678909' // Em produção, coletar do usuário
+            number: '12345678909'
           }
         },
         metadata: {
@@ -317,7 +365,6 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
       console.log('✅ Resposta do pagamento com cartão:', data);
 
       if (data.status === 'approved') {
-        // Pagamento aprovado
         const orderDetails: OrderDetails = {
           product: cartItems[0]?.product || { id: 0, name: 'Produto', price: 0, description: '', image: '' },
           paymentMethod: 'cartao',
@@ -340,7 +387,6 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
         onClose();
 
       } else if (data.status === 'pending' || data.status === 'in_process') {
-        // Pagamento pendente
         const orderDetails: OrderDetails = {
           product: cartItems[0]?.product || { id: 0, name: 'Produto', price: 0, description: '', image: '' },
           paymentMethod: 'cartao',
@@ -393,7 +439,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
     setIsProcessing(true);
 
     try {
-      const payload: any = {
+      const payload: PaymentPayload = {
         transaction_amount: parseFloat(total.toFixed(2)),
         description: `Pedido com ${totalItems} itens - Chico Cosméticos`,
         payer: {
