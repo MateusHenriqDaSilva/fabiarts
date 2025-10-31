@@ -3,6 +3,43 @@ import { NextRequest, NextResponse } from 'next/server';
 // Usando as variáveis de ambiente do arquivo .env
 const ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
+// Interfaces para o payload do Mercado Pago
+interface MercadoPagoPayer {
+  email: string;
+  identification?: {
+    type: string;
+    number: string;
+  };
+}
+
+interface MercadoPagoTransactionDetails {
+  financial_institution: null;
+}
+
+interface MercadoPagoPayload {
+  transaction_amount: number;
+  description: string;
+  payer: MercadoPagoPayer;
+  payment_method_id?: string;
+  date_of_expiration?: string;
+  token?: string;
+  installments?: number;
+  transaction_details?: MercadoPagoTransactionDetails;
+  capture?: boolean;
+}
+
+interface RequestBody {
+  transaction_amount: number;
+  description?: string;
+  payer: {
+    email: string;
+  };
+  payment_method_id?: string;
+  token?: string;
+  installments?: number;
+  payment_method_id?: string;
+}
+
 function generateIdempotencyKey(): string {
   return `mp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
@@ -23,7 +60,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
+    const body: RequestBody = await request.json();
 
     // Validações básicas
     if (!body.transaction_amount || body.transaction_amount <= 0) {
@@ -40,8 +77,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Payload base
-    const payload: any = {
+    // Payload base com tipo definido
+    const payload: MercadoPagoPayload = {
       transaction_amount: Number(body.transaction_amount.toFixed(2)),
       description: body.description?.substring(0, 200) || 'Pagamento',
       payer: {
@@ -59,11 +96,11 @@ export async function POST(request: NextRequest) {
     if (body.token) {
       payload.token = body.token;
       payload.installments = body.installments || 1;
-      payload.payment_method_id = body.payment_method_id; // Opcional - será detectado pelo token
+      payload.payment_method_id = body.payment_method_id;
       payload.transaction_details = {
         financial_institution: null
       };
-      payload.capture = true; // Capturar o pagamento imediatamente
+      payload.capture = true;
     }
 
     console.log('📤 Payload:', JSON.stringify(payload, null, 2));
