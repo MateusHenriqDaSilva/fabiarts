@@ -1118,7 +1118,7 @@ const ModalCarrinho: React.FC<ModalCarrinhoProps> = ({ isOpen, onClose }) => {
                     {paymentMethod === 'pix' && qrCode && (
                       <div className={styles.pixSection}>
                         <h5>Pagamento PIX</h5>
-                        <img
+                        <Image
                           src={`data:image/png;base64,${qrCode}`}
                           alt="QR Code PIX"
                           className={styles.qrCode}
