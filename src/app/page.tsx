@@ -11,7 +11,7 @@ import { Product, ProductCategory } from '@/types'; // ← Importar ProductCateg
 // Dados mockados dos produtos CORRIGIDOS
 const mockProducts: Product[] = [
   // Produtos de Resina - CATEGORIA CORRIGIDA
-  { id: 1, name: 'Porta-joias Resina', price: 89.90, category: 'resina', image: '/resina/resina1.jpg', description: 'Lindo porta-joias em resina artesanal' },
+  { id: 1, name: 'Porta-joias Resina', price: 5.00, category: 'resina', image: '/resina/resina1.jpg', description: 'Lindo porta-joias em resina artesanal' },
   { id: 2, name: 'Abajur Resina', price: 149.90, category: 'resina', image: '/resina/resina2.jpg', description: 'Abajur decorativo em resina' },
   { id: 3, name: 'Bandija Resina', price: 79.90, category: 'resina', image: '/resina/resina3.jpg', description: 'Bandija decorativa em resina' },
   { id: 4, name: 'Porta-retrato Resina', price: 59.90, category: 'resina', image: '/resina/resina4.jpg', description: 'Porta-retrato em resina personalizado' },

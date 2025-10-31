@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const ACCESS_TOKEN = 'APP_USR-6224315043719608-102112-8dadbec1d2d9cbf24a815f8cb8ecf2e8-225298940';
+// Usando as variáveis de ambiente do arquivo .env
+const ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN;
 
 function generateIdempotencyKey(): string {
   return `mp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -8,6 +9,18 @@ function generateIdempotencyKey(): string {
 
 export async function POST(request: NextRequest) {
   console.log('🚀 Criando pagamento...');
+
+  // Validação das variáveis de ambiente
+  if (!ACCESS_TOKEN) {
+    console.error('❌ ACCESS_TOKEN não configurado no .env');
+    return NextResponse.json(
+      { 
+        error: 'Configuração do servidor incompleta',
+        message: 'Token de acesso não configurado'
+      },
+      { status: 500 }
+    );
+  }
 
   try {
     const body = await request.json();
@@ -54,6 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('📤 Payload:', JSON.stringify(payload, null, 2));
+    console.log('🔑 Usando Access Token:', ACCESS_TOKEN.substring(0, 10) + '...');
 
     const idempotencyKey = generateIdempotencyKey();
     
